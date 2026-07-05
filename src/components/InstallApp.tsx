@@ -9,12 +9,14 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 /**
- * Offer to install StockDesk as an offline app from the auth pages.
+ * Offer to install StockDesk as an offline app (auth pages + settings).
  *
  * - Chromium (Android/desktop): captures `beforeinstallprompt` and shows a
  *   one-tap install button that opens the browser's native install dialog.
  * - iOS Safari: no programmatic prompt exists, so we show the manual
  *   "Share → Add to Home Screen" steps instead.
+ * - Everything else (prompt not fired / unsupported): manual browser-menu
+ *   steps, so the download option is ALWAYS visible.
  * - Already installed (running standalone): renders nothing.
  */
 export function InstallApp() {
@@ -66,10 +68,8 @@ export function InstallApp() {
     setDeferred(null); // the event can only be used once
   }
 
-  // Nothing actionable to show: already installed, or a browser that supports
-  // neither the install event nor iOS's manual flow.
+  // Already running as the installed app — nothing to offer.
   if (installed) return null;
-  if (!deferred && !isIOS) return null;
 
   return (
     <div className="rounded-2xl bg-surface p-4 ring-1 ring-border">
@@ -94,7 +94,7 @@ export function InstallApp() {
           <DownloadIcon />
           Install app
         </button>
-      ) : (
+      ) : isIOS ? (
         <>
           <button
             type="button"
@@ -125,6 +125,43 @@ export function InstallApp() {
                 <span>
                   Tap <span className="font-semibold text-text">Add</span> — StockDesk opens like a
                   native app and works offline.
+                </span>
+              </li>
+            </ol>
+          )}
+        </>
+      ) : (
+        <>
+          <button
+            type="button"
+            onClick={() => setShowIOSSteps((s) => !s)}
+            aria-expanded={showIOSSteps}
+            className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-surface-2 px-4 text-sm font-semibold text-text ring-1 ring-border transition hover:bg-border"
+          >
+            <DownloadIcon />
+            How to install
+          </button>
+          {showIOSSteps && (
+            <ol className="mt-3 space-y-1.5 text-xs text-muted">
+              <li className="flex gap-2">
+                <Step>1</Step>
+                <span>
+                  In <span className="font-semibold text-text">Chrome or Edge</span>, look for the
+                  install icon at the right end of the address bar (or browser menu →{" "}
+                  <span className="font-semibold text-text">Install StockDesk</span>).
+                </span>
+              </li>
+              <li className="flex gap-2">
+                <Step>2</Step>
+                <span>
+                  On Android: browser menu →{" "}
+                  <span className="font-semibold text-text">Add to Home screen</span>.
+                </span>
+              </li>
+              <li className="flex gap-2">
+                <Step>3</Step>
+                <span>
+                  Once installed, StockDesk opens full-screen and works offline.
                 </span>
               </li>
             </ol>
