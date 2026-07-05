@@ -54,13 +54,10 @@ export default function LoginPage() {
       <form onSubmit={onSubmit} className="space-y-4">
         {!cloudEnabled && (
           <AuthAlert tone="info">
-            Cloud accounts aren&apos;t set up yet, so use the sample login:{" "}
+            Cloud accounts aren&apos;t set up yet — sign in with the sample login:{" "}
             <span className="font-mono font-semibold">{DEMO_EMAIL}</span> /{" "}
-            <span className="font-mono font-semibold">{DEMO_PASSWORD}</span> — or{" "}
-            <Link href="/" className="font-semibold text-primary hover:underline">
-              continue offline
-            </Link>
-            .
+            <span className="font-mono font-semibold">{DEMO_PASSWORD}</span>. Everything stays on
+            this device.
           </AuthAlert>
         )}
         {error && <AuthAlert>{error}</AuthAlert>}

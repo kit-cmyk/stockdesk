@@ -76,8 +76,8 @@ export default function SignupPage() {
         {!cloudEnabled && (
           <AuthAlert tone="info">
             Cloud accounts aren&apos;t set up yet — StockDesk runs fully on this device.{" "}
-            <Link href="/" className="font-semibold text-primary hover:underline">
-              Continue offline
+            <Link href="/login" className="font-semibold text-primary hover:underline">
+              Use the sample login instead
             </Link>
           </AuthAlert>
         )}

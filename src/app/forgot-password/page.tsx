@@ -51,8 +51,8 @@ export default function ForgotPasswordPage() {
         {!cloudEnabled && (
           <AuthAlert tone="info">
             Password reset needs cloud accounts, which aren&apos;t set up yet.{" "}
-            <Link href="/" className="font-semibold text-primary hover:underline">
-              Continue offline
+            <Link href="/login" className="font-semibold text-primary hover:underline">
+              Back to sign in
             </Link>
           </AuthAlert>
         )}

@@ -16,7 +16,7 @@ export interface AuthResult {
 }
 
 const NO_CLOUD =
-  "Cloud accounts aren't set up. StockDesk runs fully on this device — continue offline.";
+  "Cloud accounts aren't set up. Sign in with the sample login shown above — everything stays on this device.";
 
 // ---------------------------------------------------------------------------
 // Sample (demo) account — a local-only login that works while Supabase is off.
@@ -172,11 +172,14 @@ export interface SessionState {
   cloudEnabled: boolean;
 }
 
-/** Observe the Supabase auth session. `loading` is false immediately when cloud is off. */
+/** Observe the Supabase auth session (or the local sample session when cloud is off). */
 export function useSession(): SessionState {
   const [session, setSession] = useState<Session | null>(null);
   const [demo, setDemo] = useState(false);
-  const [loading, setLoading] = useState(isCloudEnabled);
+  // Starts true in BOTH modes: the demo-session check reads localStorage in an
+  // effect, and consumers (AuthGate) must not treat "not checked yet" as
+  // "signed out" or every launch would bounce to /login.
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const supabase = getSupabase();

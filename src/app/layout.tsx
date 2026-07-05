@@ -7,6 +7,7 @@ import "./globals.css";
 const geistSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 import { Providers } from "./providers";
+import { AuthGate } from "@/components/AuthGate";
 import { BottomNav } from "@/components/BottomNav";
 import { Sidebar } from "@/components/Sidebar";
 import { SyncBanner } from "@/components/SyncBanner";
@@ -40,15 +41,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
       <body suppressHydrationWarning>
         <Providers>
-          <div className="flex min-h-dvh w-full">
-            <Sidebar />
-            <main className="flex-1 pb-24 md:pb-0">
-              <TopBar />
-              <SyncBanner />
-              <div className="mx-auto w-full max-w-6xl">{children}</div>
-            </main>
-            <BottomNav />
-          </div>
+          <AuthGate>
+            <div className="flex min-h-dvh w-full">
+              <Sidebar />
+              <main className="flex-1 pb-24 md:pb-0">
+                <TopBar />
+                <SyncBanner />
+                <div className="mx-auto w-full max-w-6xl">{children}</div>
+              </main>
+              <BottomNav />
+            </div>
+          </AuthGate>
         </Providers>
       </body>
     </html>
