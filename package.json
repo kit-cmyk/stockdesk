@@ -1,0 +1,34 @@
+{
+  "name": "stockdesk",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@serwist/next": "^9.0.11",
+    "@supabase/supabase-js": "^2.45.4",
+    "@zxing/browser": "^0.1.5",
+    "@zxing/library": "^0.21.3",
+    "dexie": "^4.0.8",
+    "dexie-react-hooks": "^1.1.7",
+    "next": "^15.5.19",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
+    "@types/uuid": "^10.0.0",
+    "serwist": "^9.0.11",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.2"
+  }
+}

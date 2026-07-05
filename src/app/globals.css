@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #f4f8fc;
+  --color-surface: #ffffff;
+  --color-surface-2: #eef4fb;
+  --color-border: #dce7f2;
+  --color-text: #1b2a3d;
+  --color-muted: #6b7e93;
+  --color-primary: #3b82f6;
+  --color-primary-fg: #ffffff;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  /* Geist (loaded in layout.tsx via next/font) drives Tailwind's font-sans/font-mono. */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background: var(--color-bg);
+  background-image: linear-gradient(180deg, #f7fbff 0%, var(--color-bg) 38%);
+  background-attachment: fixed;
+  color: var(--color-text);
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+}
+
+body {
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+}
+
+/* Hide number input spinners on mobile for cleaner steppers */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Safe-area padding for iOS home indicator */
+.pb-safe {
+  padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem);
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.animate-in {
+  animation: sheet-in 0.22s ease-out;
+}
+
+/* Side sheet: slide in from the right edge. */
+@keyframes sheet-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-side {
+  animation: sheet-in-right 0.26s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.animate-overlay {
+  animation: overlay-in 0.26s ease-out;
+}
+
+/* Invoice printing: show only the invoice document, hide app chrome. */
+@media print {
+  body {
+    background: #fff;
+  }
+  body * {
+    visibility: hidden;
+  }
+  #invoice-print,
+  #invoice-print * {
+    visibility: visible;
+  }
+  #invoice-print {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 24px;
+    width: 100%;
+    box-shadow: none !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
