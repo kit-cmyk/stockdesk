@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button, Field, Input } from "@/components/ui";
 import { AuthAlert, AuthFooterLink, AuthShell, PasswordInput } from "@/components/AuthShell";
-import { DEMO_EMAIL, DEMO_PASSWORD, sendMagicLink, signInWithPassword, useSession } from "@/lib/auth";
+import { sendMagicLink, signInAsDemo, signInWithPassword, useSession } from "@/lib/auth";
 import { isDatabaseEmpty, seedPricelistData } from "@/lib/seed";
 
 export default function LoginPage() {
@@ -54,9 +54,7 @@ export default function LoginPage() {
       <form onSubmit={onSubmit} className="space-y-4">
         {!cloudEnabled && (
           <AuthAlert tone="info">
-            Cloud accounts aren&apos;t set up yet — sign in with the sample login:{" "}
-            <span className="font-mono font-semibold">{DEMO_EMAIL}</span> /{" "}
-            <span className="font-mono font-semibold">{DEMO_PASSWORD}</span>. Everything stays on
+            Cloud accounts aren&apos;t set up yet — use the demo account below. Everything stays on
             this device.
           </AuthAlert>
         )}
@@ -94,6 +92,33 @@ export default function LoginPage() {
         <Button type="submit" className="w-full" disabled={busy}>
           {busy ? "Signing in…" : "Sign in"}
         </Button>
+
+        {!cloudEnabled && (
+          <Button
+            type="button"
+            variant="secondary"
+            className="w-full"
+            disabled={busy}
+            onClick={async () => {
+              setError(null);
+              setBusy(true);
+              const { error } = await signInAsDemo();
+              if (error) {
+                setBusy(false);
+                setError(error);
+                return;
+              }
+              try {
+                if (await isDatabaseEmpty()) await seedPricelistData();
+              } finally {
+                setBusy(false);
+              }
+              router.replace("/");
+            }}
+          >
+            Continue with demo account
+          </Button>
+        )}
 
         {cloudEnabled && (
           <Button

@@ -77,7 +77,7 @@ export default function SignupPage() {
           <AuthAlert tone="info">
             Cloud accounts aren&apos;t set up yet — StockDesk runs fully on this device.{" "}
             <Link href="/login" className="font-semibold text-primary hover:underline">
-              Use the sample login instead
+              Use the demo account instead
             </Link>
           </AuthAlert>
         )}

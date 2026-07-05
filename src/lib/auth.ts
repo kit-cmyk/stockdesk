@@ -16,7 +16,7 @@ export interface AuthResult {
 }
 
 const NO_CLOUD =
-  "Cloud accounts aren't set up. Sign in with the sample login shown above — everything stays on this device.";
+  "Cloud accounts aren't set up. Use “Continue with demo account” below — everything stays on this device.";
 
 // ---------------------------------------------------------------------------
 // Sample (demo) account — a local-only login that works while Supabase is off.
@@ -24,14 +24,15 @@ const NO_CLOUD =
 // flow can be exercised end-to-end without any cloud setup. When Supabase is
 // configured, real accounts take over and this path is ignored.
 // ---------------------------------------------------------------------------
-export const DEMO_EMAIL = "kitterspimentel@gmail.com";
+export const DEMO_EMAIL = "demo@stockdesk.local";
 export const DEMO_PASSWORD = "stockdesk123";
 const DEMO_SESSION_KEY = "stockdesk.demo-session";
 const AUTH_EVENT = "stockdesk-auth-changed";
 
 export function hasDemoSession(): boolean {
   if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(DEMO_SESSION_KEY) === DEMO_EMAIL;
+  // Any non-empty value counts (older builds stored a different demo email).
+  return Boolean(window.localStorage.getItem(DEMO_SESSION_KEY));
 }
 
 function startDemoSession(): void {
@@ -62,6 +63,15 @@ function friendly(err: unknown): string {
   if (m.includes("failed to fetch") || m.includes("network"))
     return "Couldn't reach the server. Check your connection and try again.";
   return msg || "Something went wrong. Please try again.";
+}
+
+/** One-tap demo sign-in (cloud off only) — no credentials surfaced in the UI. */
+export async function signInAsDemo(): Promise<AuthResult> {
+  if (isCloudEnabled) {
+    return { error: "Cloud accounts are enabled — sign in with your account instead." };
+  }
+  startDemoSession();
+  return { error: null };
 }
 
 export async function signInWithPassword(email: string, password: string): Promise<AuthResult> {
