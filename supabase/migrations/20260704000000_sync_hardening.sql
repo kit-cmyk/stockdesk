@@ -142,9 +142,17 @@ create trigger trg_movements_immutable
 -- ---------------------------------------------------------------------------
 -- 4. Views
 -- ---------------------------------------------------------------------------
+-- The ledger view selects m.* and the table gained columns (order_id,
+-- tax_inclusive) since it was first created — CREATE OR REPLACE VIEW cannot
+-- change column order, so drop and recreate (dependents first).
+drop view if exists public.v_product_metrics;
+drop view if exists public.v_dashboard_summary;
+drop view if exists public.v_tax_summary;
+drop view if exists public.v_movement_ledger;
+
 -- Net revenue: inclusive prices carve tax out of the entered price; exclusive
 -- prices ARE the net amount (tax sits on top). Missing snapshot = inclusive.
-create or replace view public.v_movement_ledger as
+create view public.v_movement_ledger as
 select
   m.*,
   p.name as product_name,
@@ -169,7 +177,7 @@ from public.stock_movements m
 join public.products p on p.id = m.product_id
 left join public.customers c on c.id = m.customer_id;
 
-create or replace view public.v_product_metrics as
+create view public.v_product_metrics as
 select
   p.id, p.owner_id, p.name, p.quantity_on_hand, p.avg_cost, p.sell_price,
   round(p.quantity_on_hand * p.avg_cost, 2) as stock_value,
@@ -210,7 +218,7 @@ left join (
   group by product_id
 ) s90 on s90.product_id = p.id;
 
-create or replace view public.v_dashboard_summary as
+create view public.v_dashboard_summary as
 select
   p.owner_id,
   count(*) filter (where not p.is_archived) as sku_count,
@@ -248,7 +256,7 @@ left join (
 group by p.owner_id, s.net_today, s.profit_today, s.net_7d, s.profit_7d,
          s.net_30d, s.profit_30d, s.tax_30d, s.units_30d;
 
-create or replace view public.v_tax_summary as
+create view public.v_tax_summary as
 select
   owner_id,
   date_trunc('month', occurred_at) as period,

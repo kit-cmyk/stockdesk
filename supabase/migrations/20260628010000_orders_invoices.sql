@@ -143,11 +143,15 @@ alter table public.order_items enable row level security;
 alter table public.invoices enable row level security;
 alter table public.payments enable row level security;
 
+drop policy if exists "own orders" on public.orders;
 create policy "own orders" on public.orders
   using (owner_id = auth.uid()) with check (owner_id = auth.uid());
+drop policy if exists "own order_items" on public.order_items;
 create policy "own order_items" on public.order_items
   using (owner_id = auth.uid()) with check (owner_id = auth.uid());
+drop policy if exists "own invoices" on public.invoices;
 create policy "own invoices" on public.invoices
   using (owner_id = auth.uid()) with check (owner_id = auth.uid());
+drop policy if exists "own payments" on public.payments;
 create policy "own payments" on public.payments
   using (owner_id = auth.uid()) with check (owner_id = auth.uid());

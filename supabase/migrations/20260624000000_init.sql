@@ -271,21 +271,29 @@ alter table public.stock_movements enable row level security;
 alter table public.stock_counts enable row level security;
 alter table public.stock_count_items enable row level security;
 
+drop policy if exists "own profile" on public.profiles;
 create policy "own profile" on public.profiles
   using (id = auth.uid()) with check (id = auth.uid());
 
+drop policy if exists "own categories" on public.categories;
 create policy "own categories" on public.categories
   using (owner_id = auth.uid()) with check (owner_id = auth.uid());
+drop policy if exists "own suppliers" on public.suppliers;
 create policy "own suppliers" on public.suppliers
   using (owner_id = auth.uid()) with check (owner_id = auth.uid());
+drop policy if exists "own customers" on public.customers;
 create policy "own customers" on public.customers
   using (owner_id = auth.uid()) with check (owner_id = auth.uid());
+drop policy if exists "own products" on public.products;
 create policy "own products" on public.products
   using (owner_id = auth.uid()) with check (owner_id = auth.uid());
+drop policy if exists "own movements" on public.stock_movements;
 create policy "own movements" on public.stock_movements
   using (owner_id = auth.uid()) with check (owner_id = auth.uid());
+drop policy if exists "own stock_counts" on public.stock_counts;
 create policy "own stock_counts" on public.stock_counts
   using (owner_id = auth.uid()) with check (owner_id = auth.uid());
+drop policy if exists "own stock_count_items" on public.stock_count_items;
 create policy "own stock_count_items" on public.stock_count_items
   using (owner_id = auth.uid()) with check (owner_id = auth.uid());
 
